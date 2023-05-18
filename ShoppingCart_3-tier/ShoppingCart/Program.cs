@@ -13,8 +13,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.Configure<Connection>(builder.Configuration.GetSection("ConnectionStrings"));
-builder.Services.AddScoped<IRepository<Addresses>, AddressesRepository>();
+var connection = builder.Configuration.GetSection("ConnectionStrings");
+builder.Services.Configure<Connection>(connection);
+
+builder.Services.AddSingleton<AddressesRepository>();
+builder.Services.AddSingleton<AddressesService>();
+
+builder.Services.AddSingleton<ProductsRepository>();
+builder.Services.AddSingleton<ProductsService>();
+
+//builder.Services.AddScoped<AddressesRepository, AddressesRepository>();
+//builder.Services.AddScoped<AddressesService, AddressesService>();
+
 
 var app = builder.Build();
 
