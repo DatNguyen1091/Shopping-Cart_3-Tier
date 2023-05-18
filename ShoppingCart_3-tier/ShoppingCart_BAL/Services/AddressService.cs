@@ -1,7 +1,5 @@
 ﻿using ShoppingCart_DAL.Models;
 using ShoppingCart_DAL.Repositories;
-using Microsoft.Extensions.Options;
-using ShoppingCart_DAL.Data;
 
 namespace ShoppingCart_BAL.Services
 {
@@ -9,9 +7,9 @@ namespace ShoppingCart_BAL.Services
     {
         private AddressesRepository _addressesRepository;
 
-        public AddressesService(IOptions<Connection> connection)
+        public AddressesService(AddressesRepository addressesRepository)
         {
-            _addressesRepository = new AddressesRepository(connection);
+            _addressesRepository = addressesRepository;
         }
 
         public List<Addresses> GetAllAddresses(int? page)

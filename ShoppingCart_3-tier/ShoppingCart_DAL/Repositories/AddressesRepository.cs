@@ -4,7 +4,6 @@ using ShoppingCart_DAL.Data;
 using X.PagedList;
 using ShoppingCart_DAL.Contacts;
 using Microsoft.Extensions.Options;
-using System.Data;
 
 namespace ShoppingCart_DAL.Repositories
 {
@@ -48,6 +47,7 @@ namespace ShoppingCart_DAL.Repositories
                             model.updatedAt = (DateTime)reader["updatedAt"];
                             addresses.Add(model);
                         }
+                        reader.Close();
                     }
                 }
                 connection.Close();
@@ -58,36 +58,34 @@ namespace ShoppingCart_DAL.Repositories
 
         public Addresses GetById(int id)
         {
+            Addresses model = new Addresses();
             using (SqlConnection connection = new SqlConnection(_connection.SQLString))
-            {
+            {   
                 connection.Open();
                 using (SqlCommand command = new SqlCommand("SELECT * FROM Addresses WHERE id = @id", connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = command.ExecuteReader();
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        Addresses model = new Addresses
-                        {
-                            id = reader.GetInt32(0),
-                            name = reader.GetString(1),
-                            addressLine1 = reader.GetString(2),
-                            addressLine2 = reader.GetString(3),
-                            city = reader.GetString(4),
-                            state = reader.GetString(5),
-                            country = reader.GetString(6),
-                            zipCode = reader.GetString(7),
-                            addressType = reader.GetString(8),
-                            isDeleted = reader.GetBoolean(9),
-                            createdAt = reader.GetDateTime(10),
-                            updatedAt = reader.GetDateTime(11),
-                        };
-                        return model;
+                        model.id = reader.GetInt32(0);
+                        model.name = reader.GetString(1);
+                        model.addressLine1 = reader.GetString(2);
+                        model.addressLine2 = reader.GetString(3);
+                        model.city = reader.GetString(4);
+                        model.state = reader.GetString(5);
+                        model.country = reader.GetString(6);
+                        model.zipCode = reader.GetString(7);
+                        model.addressType = reader.GetString(8);
+                        model.isDeleted = reader.GetBoolean(9);
+                        model.createdAt = reader.GetDateTime(10);
+                        model.updatedAt = reader.GetDateTime(11);
                     }
-                    connection.Close();
-                    return null!;
+                    reader.Close();
                 }
+                connection.Close();
             }
+            return model;
         }
 
         public Addresses Create(Addresses model)
@@ -110,7 +108,7 @@ namespace ShoppingCart_DAL.Repositories
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
-                return model;
+                return model; 
             }
         }
 
@@ -135,7 +133,7 @@ namespace ShoppingCart_DAL.Repositories
                     int rows = command.ExecuteNonQuery();
                     if (rows == 0)
                     {
-                        return null!;
+                        throw new Exception("Update failed");
                     }
                 }
                 return model;

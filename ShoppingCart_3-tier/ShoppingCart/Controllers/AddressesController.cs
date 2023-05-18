@@ -12,9 +12,9 @@ namespace ShoppingCart.Controllers
     {
         private readonly AddressesService _addressesService;
 
-        public AddressesController(IOptions<Connection> connection)
+        public AddressesController(AddressesService addressesService)
         {
-            _addressesService = new AddressesService(connection);
+            _addressesService = addressesService;
         }
 
         [HttpGet]
