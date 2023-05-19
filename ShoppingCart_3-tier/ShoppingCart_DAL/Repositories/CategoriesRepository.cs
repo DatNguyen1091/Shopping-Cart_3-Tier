@@ -3,8 +3,6 @@ using ShoppingCart_DAL.Contacts;
 using ShoppingCart_DAL.Data;
 using ShoppingCart_DAL.Models;
 using System.Data.SqlClient;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace ShoppingCart_DAL.Repositories
 {
@@ -20,7 +18,8 @@ namespace ShoppingCart_DAL.Repositories
         {
             List<Categories> categories = new List<Categories>();
             int pageSize = 10;
-            var offset = (page - 1) * pageSize;
+            var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+            var offset = (pageIndex - 1) * pageSize;
             using (SqlConnection connection = new SqlConnection(_connection.SQLString))
             {
                 connection.Open();

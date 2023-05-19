@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoppingCart_DAL.Models;
 using ShoppingCart_BAL.Services;
-using Microsoft.Extensions.Options;
-using ShoppingCart_DAL.Data;
 
 namespace ShoppingCart.Controllers
 {
@@ -21,7 +19,7 @@ namespace ShoppingCart.Controllers
         public List<Addresses> GetAddresses(int? page)
         {
             return _addressesService.GetAllAddresses(page);
-        }
+        } 
 
         [HttpGet("{id}")]
         public Addresses GetAddressId(int id)
