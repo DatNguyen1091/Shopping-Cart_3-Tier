@@ -1,7 +1,5 @@
 using ShoppingCart_BAL.Services;
-using ShoppingCart_DAL.Contacts;
 using ShoppingCart_DAL.Data;
-using ShoppingCart_DAL.Models;
 using ShoppingCart_DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +16,39 @@ builder.Services.Configure<Connection>(connection);
 
 builder.Services.AddSingleton<AddressesRepository>();
 builder.Services.AddSingleton<AddressesService>();
+
+builder.Services.AddSingleton<BrandsRepository>();
+builder.Services.AddSingleton<BrandsServices>();
+
+builder.Services.AddSingleton<CartItemsRepository>();
+builder.Services.AddSingleton<CartItemsServices>();
+
+builder.Services.AddSingleton<CartsRepository>();
+builder.Services.AddSingleton<CartsServices>();
+
+builder.Services.AddSingleton<CategoriesRepository>();
+builder.Services.AddSingleton<CategoriesServices>();
+
+builder.Services.AddSingleton<CustomerAddressesRepository>();
+builder.Services.AddSingleton<CustomerAddressesServices>();
+
+builder.Services.AddSingleton<CustomersRepository>();
+builder.Services.AddSingleton<CustomersServices>();
+
+builder.Services.AddSingleton<OrderItemsRepository>();
+builder.Services.AddSingleton<OrderItemsServices>();
+
+builder.Services.AddSingleton<OrderRepository>();
+builder.Services.AddSingleton<OrdersServices>();
+
+builder.Services.AddSingleton<PeopleRepository>();
+builder.Services.AddSingleton<PeopleServices>();
+
+builder.Services.AddSingleton<ProductBandsRepository>();
+builder.Services.AddSingleton<ProductBrandsServices>();
+
+builder.Services.AddSingleton<ProductCategoriesRepository>();
+builder.Services.AddSingleton<ProductCategoriesServices>();
 
 builder.Services.AddSingleton<ProductsRepository>();
 builder.Services.AddSingleton<ProductsService>();
