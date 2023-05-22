@@ -14,48 +14,33 @@ builder.Services.AddSwaggerGen();
 var connection = builder.Configuration.GetSection("ConnectionStrings");
 builder.Services.Configure<Connection>(connection);
 
-builder.Services.AddSingleton<AddressesRepository>();
-builder.Services.AddSingleton<AddressesService>();
+builder.Services.AddScoped<AddressesRepository, AddressesRepository>();
+builder.Services.AddScoped<AddressesService, AddressesService>();
+builder.Services.AddScoped<CartItemsRepository, CartItemsRepository>();
+builder.Services.AddScoped<CartItemsServices, CartItemsServices>();
+builder.Services.AddScoped<CartsRepository, CartsRepository>();
+builder.Services.AddScoped<CartsServices, CartsServices>();
+builder.Services.AddScoped<CustomerAddressesRepository, CustomerAddressesRepository>();
+builder.Services.AddScoped<CustomerAddressesServices, CustomerAddressesServices>();
+builder.Services.AddScoped<CustomersRepository, CustomersRepository>();
+builder.Services.AddScoped<CustomersServices, CustomersServices>();
+builder.Services.AddScoped<OrderItemsRepository, OrderItemsRepository>();
+builder.Services.AddScoped<OrderItemsServices, OrderItemsServices>();
+builder.Services.AddScoped<OrderRepository, OrderRepository>();
+builder.Services.AddScoped<OrdersServices, OrdersServices>();
 
 builder.Services.AddSingleton<BrandsRepository>();
 builder.Services.AddSingleton<BrandsServices>();
-
-builder.Services.AddSingleton<CartItemsRepository>();
-builder.Services.AddSingleton<CartItemsServices>();
-
-builder.Services.AddSingleton<CartsRepository>();
-builder.Services.AddSingleton<CartsServices>();
-
 builder.Services.AddSingleton<CategoriesRepository>();
 builder.Services.AddSingleton<CategoriesServices>();
-
-builder.Services.AddSingleton<CustomerAddressesRepository>();
-builder.Services.AddSingleton<CustomerAddressesServices>();
-
-builder.Services.AddSingleton<CustomersRepository>();
-builder.Services.AddSingleton<CustomersServices>();
-
-builder.Services.AddSingleton<OrderItemsRepository>();
-builder.Services.AddSingleton<OrderItemsServices>();
-
-builder.Services.AddSingleton<OrderRepository>();
-builder.Services.AddSingleton<OrdersServices>();
-
 builder.Services.AddSingleton<PeopleRepository>();
 builder.Services.AddSingleton<PeopleServices>();
-
 builder.Services.AddSingleton<ProductBandsRepository>();
 builder.Services.AddSingleton<ProductBrandsServices>();
-
 builder.Services.AddSingleton<ProductCategoriesRepository>();
 builder.Services.AddSingleton<ProductCategoriesServices>();
-
 builder.Services.AddSingleton<ProductsRepository>();
 builder.Services.AddSingleton<ProductsService>();
-
-//builder.Services.AddScoped<AddressesRepository, AddressesRepository>();
-//builder.Services.AddScoped<AddressesService, AddressesService>();
-
 
 var app = builder.Build();
 
