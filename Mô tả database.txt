@@ -1,0 +1,63 @@
+Mô tả tổng quan xây dựng database Shopping Cart
+
+- Bảng Categories được sử dụng để lưu trữ thông tin về các danh mục, giúp cho việc quản lý và sắp xếp sản phẩm trong các danh mục khác nhau. Nó có các cột để lưu trữ tên của danh mục, mô tả, trạng thái và các thuộc tính khác của danh mục. Cột createdAt và updatedA được sử dụng để lưu trữ ngày tạo và cập nhật danh mục. 
+
+- Bảng Products được sử dụng để lưu trữ thông tin về các sản phẩm. Nó có các cột để lưu trữ tên sản phẩm, mô tả, giá cả, SKU, model, URL ảnh và các thuộc tính khác của sản phẩm. Các cột như isBestseller, isFeatured và productStatus được sử dụng để xác định các thuộc tính của sản phẩm.
+Ở cột productStatus giá trị mặc định của cột là 'active' và giá trị của cột phải thuộc vào danh sách giá trị được chỉ định sẵn với câu lệnh CHECK, trong trường hợp này là 'active' hoặc 'inactive', có nghĩa là khi thêm hoặc cập nhật dữ liệu cho cột productStatus, giá trị của nó phải là active hoặc inactive. Nếu không thì hệ thống sẽ báo lỗi và thao tác đó sẽ không được thực hiện.
+Các cột createdAt và updatedAt được sử dụng để lưu trữ ngày tạo và cập nhật sản phẩm.
+Ví dụ: 
++ Thêm mới một sản phẩm vào cửa hàng: thông tin về sản phẩm sẽ được thêm vào bảng này gồm tên sản phẩm, mô tả, giá, số lượng, trạng thái, hình ảnh và các thông tin khác liên quan đến sản phẩm.
++ Cập nhật thông tin sản phẩm: nếu thông tin về sản phẩm thay đổi, như giá, số lượng hoặc trạng thái, các giá trị trong bảng này cần được cập nhật để đảm bảo tính chính xác của cơ sở dữ liệu.
++ Xóa sản phẩm khỏi cửa hàng: nếu sản phẩm không còn được bán hoặc không còn sẳn, thì có thể được đánh dấu là đã xóa và loại bỏ khỏi bảng.
++ Truy vấn thông tin về sản phẩm: thông tin về các sản phẩm có thể được truy vấn từ bảng này để phục vụ cho các mục đích...
+
+- Bảng ProductCategories ở đây được sử dụng để tạo ra mối quan hệ nhiều - nhiều giữa bảng Products và Categories có nghĩa là mỗi sản phẩm có thể có trong nhiều danh mục và mỗi danh mục có thể có nhiều sản phẩm khác nhau. 
+Bảng ProductCategories thì trong đó cột id là cột khóa chính và cột productId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng Products còn categotyId là cột khóa ngoại tham chiếu đến khóa chính (id) của bảng Categories. Các cột createdAt và updatedAt được sử dụng để lưu trữ ngày tạo và cập nhật cảu sự liên kết giữa sản phẩm và danh mục.
+Ví dụ: Nếu ta tạo sản phẩm A và chỉ định nó thuộc danh mục X, thì bảng ProductCategories sẽ có hai bản ghi với giá trị productId tham chiếu từ id của A và categoryId tham chiếu từ id của X. Tương tự, nếu danh mục X có sản phẩm A, B thì bảng ProductCategories sẽ có hai bản ghi với giá trị categoryId của X và productId của A, B. 
+Sử dụng ON DELETE CASCADE và ON UPDATE CASCADE để đảm bảo tính nhất quán và toàn vẹn dữ liệu trong cơ sở dữ liệu. 
+Ví dụ: Nếu một sản phẩm trong bảng Products bị xóa, tất cả các bản ghi trong bảng ProductCategories có liên kết đến sản phẩm đó sẽ bị xóa. Tương tự, nếu một danh mục trong bảng Categories được cập nhật, tất cả các bản ghi trong bảng ProductCategories có liên kết đến danh mục đó sẽ được cập nhật để đảm bảo tính nhất quán dữ liệu.
+
+- Bảng Carts được sử dụng để lưu trữ thông tin, theo dõi thông tin giỏ hàng của khách hàng. Mỗi bản ghi đại diện cho một giỏ hàng duy nhất gồm id giỏ hàng, uniqueCartId mã giỏ hàng duy nhất, cartStatus trạng thái của giảo hàng được để mặt định là 'Open' và giá trị được chỉ định sẵn với câu lệnh CHECK gồm 'Open', 'CheckedOut'. Hai cột createdAt và updatedAt thông tin về thời gian tạo và cập nhật cảu giỏ hàng.
+
+- Bảng CartItems được sử dụng để tạo mối quan hệ nhiều - nhiều giữa hai bảng Products và Carts có nghĩa là mỗi sản phẩm có thể có trong nhiều giỏ hàng và tương tự mỗi giỏ hàng có thể có nhiều sản phẩm.
+Gồm id là khóa chính, quantity số lượng sản phẩm trong giỏ hàng, cột productId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng Products còn cartId là cột khóa ngoại tham chiếu đến khóa chính (id) của bảng Carts. Các cột createdAt và updatedAt được sử dụng để lưu trữ ngày tạo và cập nhật sản phẩm trong giỏ hàng.
+Ví dụ: Khi khách hàng thêm 1 sản phẩm A vào giỏ hàng X thì bảng CartItems sẽ nhận các giá trị là số lượng(quantity) của sản phẩm được thêm vào giỏ và productId tham chiếu từ id trong bảng Products của sản phẩm A và cartId tham chiếu từ id giỏ hàng X trong bảng Carts. 
+Nếu một sản phẩm trong bảng Products bị xóa hoạc cập nhật, tất cả các bản ghi trong bảng CartItems có liên kết đến sản phẩm đó sẽ bị xóa hoạc cập nhật. Tương tự, nếu một giỏ hàng trong bảng Carts bị xóa hoạc cập nhật thì tất cả các bản ghi trong bảng CartItems có liên kết đến giỏ hàng đó cũng bị xóa hoạc cập nhật. 
+Sử dụng ON DELETE CASCADE và ON UPDATE CASCADE để đảm bảo tính nhất quán và toàn vẹn dữ liệu trong cơ sở dữ liệu.
+Ví dụ: Trong bảng CartItems gồm có sản phẩm A và B ở giỏ hàng X, nếu ở bảng Products xóa đi sản phẩm B thì có nghĩa là sản phẩm B không tồn tại, vậy thì các bản ghi trong bảng CartItems có trường cartId liên kết với id của sản phẩm B ở Products trong CartItems cũng phải được xóa đi để đảm bảo tính nhất quán và toàn vẹn của dữ liệu.
+
+- Bảng Brands chứa thông tin về các thương hiệu của sản phẩm. Mỗi bản ghi trong bảng đại diện cho một thương hiệu cụ thể, gồm tên thương hiệu, nguồn(slug), mô tả, từ khóa tìm kiếm, trạng thái thương hiệu và thời gian tạo và cập nhật. Bảng Brands có thể được sử dụng để liệt kê các thương hiệu sản phẩm và các thông tin liên quan đến sản phẩm.
+
+- Bảng ProductBrands là bảng tạo liên kết giữa bảng Products và bảng Brands, dùng để lưu trữ thông tin về thương hiệu của sản phẩm. Trong đó id là khóa chính, productId là khóa ngoại tham chiếu tới bảng Products(id), brandId là khóa ngoại tham chiếu tới bảng Brands(id), và các trường createdAt và updatedAt lưu trữ thời điểm tạo và cập nhật bản ghi.
+Ví dụ: Nếu sản phẩm A có thương hiệu là X, thì bản ghi trong bảng ProductBrands sẽ nhận các giá trị là productId tham chiếu đến id sản phẩm A trong bảng Products và brandId tham chiếu đến id của thương hiệu X trong bảng Brands. 
+Sử dụng ON DELETE CASCADE ON UPDATE CASCADE để khi sản phẩm hay thương hiệu trong bảng Products hoạc Brands bị xóa hay cập nhật thì các bản ghi có liến kết ở bảng ProductBrands cũng được xóa hay cập nhật, bảo đảm tính toàn vẹn và nhất quán của dữ liệu.
+
+- Bảng People được sử dụng để lưu trữ thông tin về tất cả khách hàng. Các thông tin gồm tên, họ, địa chỉ email, số điện thoại, giới tính, ngày sinh và thời gian tạo và cập nhật thông tin. 
+
+- Bảng Customers được sử dụng để lưu trữ thông tin về khách hàng. Nó có các trường như id, personId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng People để lưu thông tin cá nhân của khách hàng sử dụng ON DELETE CASCADE ON UPDATE CASCADE để khi khách hàng trong bảng People bị xóa hay cập nhật thì bản ghi personId có liên kết cũng được xóa hay cập nhật, isDeleted xác định xem khách hàng này đã bị xóa chưa và được để mặt định là false, createdAt và updatedAt thời điểm tạo và cập nhật bản ghi.
+Ví dụ: Một khách hàng A mới đăng ký trong hệ thống. Thông tin của khách hàng A được lưu trữ trong bảng People, bao gồm tên, địa chỉ email, số điện thoại, ngày sinh,... Khi hoàn tất đăng ký, một bản ghi mới sẽ được thêm vào bảng Customers với khóa ngoại personId trỏ đến bản ghi id của khách hàng A trong bảng People. Bảng Customers có thể chứa thông tin như lịch sử đơn hàng, thông tin thanh toán,... chỉ liên quan đến khách hàng A đó.
+
+- Bảng Addresses dùng để lưu thông tin về địa chỉ của khách hàng, gồm name tên người nhận,addressLine1 addressLine2 địa chỉ, city thành phố, country quốc gia, zipCode mã bưu điện và addressType loại địa chỉ được mặc định là 'Unknown' và giá trị được chỉ định sẵn với câu lệnh CHECK gồm 'Delivery', 'Billing', 'Unknown', isDeleted để xem địa chỉ đó đã bị xóa hay chưa mặc định là false, các cột createdAt và updatedAt được sử dụng để lưu trữ ngày tạo và cập nhật của địa chỉ của khách hàng. 
+Ví dụ: Khi một khách hàng đăng ký tài khoản hoặc đặt hàng, thì họ có thể thêm hoặc chỉnh sửa thông tin địa chỉ của mình trong bảng này.
+
+- Bảng CustomerAddresses là bảng để liên kết giữa bảng Customers và Addresses. Nó lưu trữ thông tin về các địa chỉ của khách hàng, gồm customerId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng Customers và addressId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng Addresses. Bảng này cho phép mỗi khách hàng có thể có nhiều địa chỉ khác nhau và mỗi địa chỉ cũng có thể được có bởi nhiều khách hàng.
+Ví dụ: Một khách hàng có thể đăng ký nhiều địa chỉ giao hàng khác nhau cho các đơn hàng khác nhau. Vì vậy bảng CustomerAddresses có thể được sử dụng để lưu trữ các liên kết giữa khách hàng và các địa chỉ giao hàng của. Bảng này sẽ có hai cột khóa ngoại: customerId tham chiếu đến bảng Customers qua id, và addressId tham chiếu đến bảng Addresses qua id.
+
+- Bảng Orders là đơn đặt hàng của khách hàng. Nó lưu trữ thông tin về các đơn đặt hàng gồm orderTotal tổng giá trị đơn hàng, orderItemTotal số lượng sản phẩm, shippingCharge phí vận chuyển, deliveryAddressId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng Addresses địa chỉ giao hàng, customerId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng Customers khách hàng đặt hàng và orderStatus trạng thái đơn hàng mặc định là 'Submitted' và giá trị được chỉ định sẵn với câu lệnh CHECK gồm 'Canceled', 'Submitted', 'Completed', 'Processing'. Các cột createdAt và updatedAt được sử dụng để lưu trữ ngày tạo và cập nhật của đơn hàng.
+Ví dụ: Khi khách hàng A tạo một đơn hàng thì customerId sẽ nhận giá trị id địa chỉ khách hàng A trong bảng Addresses để lấy thông tin về địa chỉ của khách hàng A. 
+
+- Bảng OrderItems được sử dụng để lưu thông tin về các sản phẩm trong một đơn hàng. Bảng này chứa các cột như quantity số lượng, price giá, orderId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng Orders thông tin về đơn hàng mà sản phẩm thuộc về, và productId là khóa ngoại tham chiếu đến cột khóa chính (id) của bảng Products thông tin về sản phẩm.
+Ví dụ: Một đơn hàng có id ở bảng Orders là 1 gồm 3 mặt hàng: 2 sản phẩm A giá 500 có id ở bảng Products là 101 và 1 sản phẩm B giá 200 có id ở bảng Products là 103. Thì bảng OrderItems sẽ lưu thông tin như sau:
+Sản phẩm A: quantity = 2, price = 500, orderId = 1, productId = 101
+Sản phẩm B: quantity = 1, price = 200, orderId = 2, productId = 103
+Trường orderId sẽ trỏ đến giá trị id của bảng Orders và trường productId sẽ trỏ đến giá trị id của bảng Products.
+Sử dụng ON DELETE CASCADE ON UPDATE CASCADE để đảm bảo rằng khi sản phẩm hay đơn hàng ở các bảng Products và Orders bị xóa hay cập nhật thì các trường orderId hoạc productId cùng được xóa hoạc cập nhật.
+
+
+
+
+
+
+
+
+ 
