@@ -87,7 +87,7 @@ namespace ShoppingCart_DAL.Repositories
             using (SqlConnection connection = new SqlConnection(_connection.SQLString))
             {
                 connection.Open();
-                var query = "INSERT INTO Categories (name, slug, description, metaDescription, metaKeywords, categoryStatus,isDeleted) VALUES (@name, @slug, @description, @metaDescription, @metaKeywords, @categoryStatus,@isDeleted)";
+                var query = "INSERT INTO Categories (name, slug, description, metaDescription, metaKeywords, categoryStatus, isDeleted) VALUES (@name, @slug, @description, @metaDescription, @metaKeywords, @categoryStatus, @isDeleted)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@name", model.name);
@@ -102,7 +102,7 @@ namespace ShoppingCart_DAL.Repositories
                 connection.Close();
                 return model;
             }
-        }
+        }   
 
         public Categories Update(int id, Categories model)
         {
