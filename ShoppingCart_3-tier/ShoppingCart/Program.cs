@@ -41,6 +41,9 @@ builder.Services.AddSingleton<ProductCategoriesServices>();
 builder.Services.AddSingleton<ProductsRepository>();
 builder.Services.AddSingleton<ProductsService>();
 
+builder.Services.AddSingleton<ListProCateReposiory>();
+builder.Services.AddSingleton<ListProCateServices>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
