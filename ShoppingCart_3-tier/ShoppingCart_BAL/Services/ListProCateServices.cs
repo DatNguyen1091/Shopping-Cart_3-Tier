@@ -14,7 +14,17 @@ namespace ShoppingCart_BAL.Services
 
         public List<ListProCate> GetAllListProCate(int? page)
         {
-            return _listProCateReposiory.GetAll(page);
+            return _listProCateReposiory.GetAllInnerJoin(page);
+        }
+
+        public List<ListProCate> GetAllListProCateLJ(int? page)
+        {
+            return _listProCateReposiory.GetAllLeftJoin(page);
+        }
+
+        public List<ListProCate> GetAllListProCateRJ(int? page)
+        {
+            return _listProCateReposiory.GetAllRightJoin(page);
         }
     }
 }

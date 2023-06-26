@@ -21,5 +21,17 @@ namespace ShoppingCart.Controllers
         {
             return _listProCateServices.GetAllListProCate(page);
         }
+
+        [HttpGet("/LeftJoin")]
+        public List<ListProCate> GetListProCateLJ(int? page)
+        {
+            return _listProCateServices.GetAllListProCateLJ(page);
+        }
+
+        [HttpGet("/RightJoin")]
+        public List<ListProCate> GetListProCateRJ(int? page)
+        {
+            return _listProCateServices.GetAllListProCateRJ(page);
+        }
     }
 }
