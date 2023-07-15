@@ -11,6 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options => options.AddPolicy("AllowOrigin", policy =>
+{
+    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+}));
+
 var connection = builder.Configuration.GetSection("ConnectionStrings");
 builder.Services.Configure<Connection>(connection);
 
@@ -53,7 +58,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//Connection.ConnectionString = "Server=DATNGUYEN\\SQLEXPRESS;Database=ShoppingCart000;Integrated Security=True;";
+
+app.UseCors("AllowOrigin");
 
 app.UseHttpsRedirection();
 
