@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using ShoppingCart_BAL.Services;
 using ShoppingCart_DAL.Models;
 
@@ -6,6 +7,7 @@ namespace ShoppingCart.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
     public class ProductsController : ControllerBase
     {
         private readonly ProductsService _productsService;
