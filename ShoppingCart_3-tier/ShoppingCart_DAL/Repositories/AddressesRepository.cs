@@ -1,7 +1,6 @@
 ﻿using System.Data.SqlClient;
 using ShoppingCart_DAL.Models;
 using ShoppingCart_DAL.Data;
-using X.PagedList;
 using ShoppingCart_DAL.Contacts;
 using Microsoft.Extensions.Options;
 
@@ -52,8 +51,7 @@ namespace ShoppingCart_DAL.Repositories
                 }
                 connection.Close();
             }
-            var address = addresses.ToPagedList(pageIndex, pageSize);
-            return address.ToList();
+            return addresses.ToList();
         }
 
         public Addresses GetById(int id)

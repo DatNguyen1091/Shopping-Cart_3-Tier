@@ -3,7 +3,6 @@ using ShoppingCart_DAL.Contacts;
 using ShoppingCart_DAL.Data;
 using ShoppingCart_DAL.Models;
 using System.Data.SqlClient;
-using X.PagedList;
 
 namespace ShoppingCart_DAL.Repositories
 {
@@ -17,7 +16,7 @@ namespace ShoppingCart_DAL.Repositories
 
         public List<People> GetAll(int? page)
         {
-            List<People> peoples = new List<People>();
+            List<People> people = new List<People>();
             var pageSize = 10;
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             using (SqlConnection connection = new SqlConnection(_connection.SQLString))
@@ -44,13 +43,12 @@ namespace ShoppingCart_DAL.Repositories
                             model.isDeleted = (bool)reader["isDeleted"];
                             model.createdAt = (DateTime)reader["createdAt"];
                             model.updatedAt = (DateTime)reader["updatedAt"];
-                            peoples.Add(model);
+                            people.Add(model);
                         }
                     }
                 }
                 connection.Close();
             }
-            var people = peoples.ToPagedList(pageIndex, pageSize);
             return people.ToList();
         }
 

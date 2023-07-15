@@ -3,7 +3,6 @@ using ShoppingCart_DAL.Contacts;
 using ShoppingCart_DAL.Data;
 using ShoppingCart_DAL.Models;
 using System.Data.SqlClient;
-using X.PagedList;
 
 namespace ShoppingCart_DAL.Repositories
 {
@@ -18,12 +17,12 @@ namespace ShoppingCart_DAL.Repositories
         public List<Products> GetAll(int? page)
         {
             List<Products> products = new List<Products>();
-            var pageSize = 10;
+            var pageSize = 6;
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
             using (SqlConnection connection = new SqlConnection(_connection.SQLString))
             {
                 connection.Open();
-                var offset = (pageIndex - 1) * pageSize;
+                var offset = (pageIndex - 1)  * pageSize;
                 using (SqlCommand command = new SqlCommand("SELECT * FROM Products ORDER BY id OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY", connection))
                 {
                     command.Parameters.AddWithValue("@offset", offset);
@@ -57,8 +56,7 @@ namespace ShoppingCart_DAL.Repositories
                     }
                 }
             }
-            var items = products.ToPagedList(pageIndex, pageSize);
-            return items.ToList();
+            return products.ToList();
         }
 
         public Products GetById(int id)

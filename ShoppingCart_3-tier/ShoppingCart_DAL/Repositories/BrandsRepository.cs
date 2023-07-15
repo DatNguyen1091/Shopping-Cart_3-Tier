@@ -3,9 +3,6 @@ using ShoppingCart_DAL.Contacts;
 using ShoppingCart_DAL.Data;
 using ShoppingCart_DAL.Models;
 using System.Data.SqlClient;
-using System.Reflection;
-using System.Xml.Linq;
-using X.PagedList;
 
 namespace ShoppingCart_DAL.Repositories
 {
@@ -51,8 +48,7 @@ namespace ShoppingCart_DAL.Repositories
                 }
                 connection.Close();
             }
-            var brand = brands.ToPagedList(pageIndex, pageSize);
-            return brand.ToList();
+            return brands.ToList();
         }
 
         public Brands GetById(int id)
