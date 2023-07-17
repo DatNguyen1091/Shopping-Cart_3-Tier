@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using ShoppingCart_BAL.Services;
 using ShoppingCart_DAL.Data;
 using ShoppingCart_DAL.Repositories;
@@ -15,6 +16,17 @@ builder.Services.AddCors(options => options.AddPolicy("AllowOrigin", policy =>
 {
     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 }));
+
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)    
+    .AddCookie(options =>
+    {
+        options.SlidingExpiration = true;
+    });
+
+
 
 var connection = builder.Configuration.GetSection("ConnectionStrings");
 builder.Services.Configure<Connection>(connection);
@@ -49,6 +61,9 @@ builder.Services.AddSingleton<ProductsService>();
 builder.Services.AddSingleton<ListProCateReposiory>();
 builder.Services.AddSingleton<ListProCateServices>();
 
+builder.Services.AddSingleton<UsersRepository>();
+builder.Services.AddSingleton<UsersService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -59,12 +74,17 @@ if (app.Environment.IsDevelopment())
 }
 
 
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
 app.UseCors("AllowOrigin");
 
-app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+endpoints.MapControllers());
 
 app.Run();
