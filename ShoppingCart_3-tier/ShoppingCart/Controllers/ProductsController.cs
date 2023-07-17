@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingCart_BAL.Services;
 using ShoppingCart_DAL.Models;
@@ -23,7 +25,9 @@ namespace ShoppingCart.Controllers
             return _productsService.GetAllProducts(page);
         }
 
+
         [HttpGet("{id}")]
+        [Authorize]
         public Products GetProductsId(int id)
         {
             return _productsService.GetProductsById(id);
