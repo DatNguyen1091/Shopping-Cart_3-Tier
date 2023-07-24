@@ -1,4 +1,5 @@
-﻿using ShoppingCart_DAL.Models;
+﻿using ShoppingCart_DAL.Data;
+using ShoppingCart_DAL.Models;
 using ShoppingCart_DAL.Repositories;
 
 namespace ShoppingCart_BAL.Services
@@ -21,6 +22,11 @@ namespace ShoppingCart_BAL.Services
                 return true; 
             }
             return false; 
+        }
+
+        public Users CreatAccount(Users account)
+        {
+            return _usersRepository.CreatNewUserAcc(account);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using ShoppingCart_DAL.Data;
 using ShoppingCart_DAL.Models;
 using System.Data.SqlClient;
@@ -16,7 +15,7 @@ namespace ShoppingCart_DAL.Repositories
 
         public Users GetUserByUsername(string username)
         {
-            Users? user = null;
+            Users? account = null;
             using (SqlConnection connection = new SqlConnection(_connection.SQLString))
             {
                 connection.Open();
@@ -26,18 +25,35 @@ namespace ShoppingCart_DAL.Repositories
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        user = new Users
+                        account = new Users
                         {
                             id = reader.GetInt32(0),
                             Username = reader.GetString(1),
                             Password = reader.GetString(2),
-                            Email = reader.GetString(3),
                         };
                     }
                     reader.Close();
                 }
             }
-            return user!;
+            return account!;
+        }
+
+        public Users CreatNewUserAcc(Users acc)
+        {
+            using (SqlConnection connection = new SqlConnection(_connection.SQLString))
+            {
+                connection.Open();
+                var query = "INSERT INTO Users ( Username, Password, Email) VALUES ( @Username, @Password, @Email)";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Username", acc.Username);
+                    command.Parameters.AddWithValue("@Password", acc.Password);
+                    command.Parameters.AddWithValue("@Email", acc.Email);
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+                return acc;
+            }
         }
     }
 }

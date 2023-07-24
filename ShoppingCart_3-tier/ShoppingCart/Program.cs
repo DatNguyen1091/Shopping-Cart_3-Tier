@@ -14,7 +14,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options => options.AddPolicy("AllowOrigin", policy =>
 {
-    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    //policy.WithOrigins("http://127.0.0.1:5500").AllowCredentials();
+    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5500").AllowCredentials();
+    //policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 }));
 
 
@@ -23,6 +25,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)    
     .AddCookie(options =>
     {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
         options.SlidingExpiration = true;
     });
 

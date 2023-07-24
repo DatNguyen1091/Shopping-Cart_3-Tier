@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingCart_BAL.Services;
 using System.Security.Claims;
 using System.Net;
-using Microsoft.AspNetCore.Cors;
+using ShoppingCart_DAL.Models;
+using ShoppingCart_DAL.Data;
+using System.Security.Principal;
 
 namespace ShoppingCart.Controllers
 {
@@ -20,8 +22,10 @@ namespace ShoppingCart.Controllers
         }
         
         [HttpPost("Login")]
-        public async void Login(string username, string password)
-        {
+        public async void Login(Users user)
+        {   
+            var username = user.Username!;
+            var password = Md5Password.MD5Hash(user.Password!);
 
             bool isAuthenticated = _usersService.AuthenticateUser(username, password);
 
@@ -46,12 +50,19 @@ namespace ShoppingCart.Controllers
         }
 
 
-        [HttpGet("Logout")]
+        [HttpPost("Logout")]
         public async void Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             Response.StatusCode = (int)HttpStatusCode.OK;
+        }
+
+        [HttpPost("Signup")]
+        public Users PostAccount(Users account)
+        {
+            account.Password = Md5Password.MD5Hash(account.Password!);
+            return _usersService.CreatAccount(account);
         }
     }
 }
