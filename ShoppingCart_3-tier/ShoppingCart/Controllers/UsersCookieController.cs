@@ -6,23 +6,22 @@ using System.Security.Claims;
 using System.Net;
 using ShoppingCart_DAL.Models;
 using ShoppingCart_DAL.Data;
-using System.Security.Principal;
 
 namespace ShoppingCart.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersCookieController : ControllerBase
     {
-        private readonly UsersService _usersService;
+        private readonly UsersCookieService _usersService;
 
-        public UsersController(UsersService usersService)
+        public UsersCookieController(UsersCookieService usersService)
         {
             _usersService = usersService;
         }
         
         [HttpPost("Login")]
-        public async void Login(Users user)
+        public async void Login(UsersCookie user)
         {   
             var username = user.Username!;
             var password = Md5Password.MD5Hash(user.Password!);
@@ -59,7 +58,7 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpPost("Signup")]
-        public Users PostAccount(Users account)
+        public UsersCookie PostAccount(UsersCookie account)
         {
             account.Password = Md5Password.MD5Hash(account.Password!);
             return _usersService.CreatAccount(account);

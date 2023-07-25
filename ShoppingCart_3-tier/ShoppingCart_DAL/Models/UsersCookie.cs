@@ -1,7 +1,7 @@
 ﻿
 namespace ShoppingCart_DAL.Models
 {
-    public class Users : Common
+    public class UsersCookie : Common
     {
         public int id { get; set; }
         public string? Username { get; set; }

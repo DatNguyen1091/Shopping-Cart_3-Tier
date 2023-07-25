@@ -24,7 +24,6 @@ namespace ShoppingCart.Controllers
             return _productsService.GetAllProducts(page);
         }
 
-
         [HttpGet("{id}")]
         [Authorize]
         public Products GetProductsId(int id)

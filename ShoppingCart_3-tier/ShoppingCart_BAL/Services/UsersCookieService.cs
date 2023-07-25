@@ -1,21 +1,20 @@
-﻿using ShoppingCart_DAL.Data;
-using ShoppingCart_DAL.Models;
+﻿using ShoppingCart_DAL.Models;
 using ShoppingCart_DAL.Repositories;
 
 namespace ShoppingCart_BAL.Services
 {
-    public class UsersService
+    public class UsersCookieService
     {
-        private UsersRepository _usersRepository;
+        private UsersCookieRepository _usersRepository;
 
-        public UsersService(UsersRepository usersRepository)
+        public UsersCookieService(UsersCookieRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }
 
         public bool AuthenticateUser(string username, string password)
         {
-            Users user = _usersRepository.GetUserByUsername(username);
+            UsersCookie user = _usersRepository.GetUserByUsername(username);
 
             if (user != null && user.Password == password)
             {
@@ -24,7 +23,7 @@ namespace ShoppingCart_BAL.Services
             return false; 
         }
 
-        public Users CreatAccount(Users account)
+        public UsersCookie CreatAccount(UsersCookie account)
         {
             return _usersRepository.CreatNewUserAcc(account);
         }
