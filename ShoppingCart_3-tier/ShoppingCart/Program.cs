@@ -1,7 +1,12 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using ShoppingCart_BAL.Services;
 using ShoppingCart_DAL.Data;
 using ShoppingCart_DAL.Repositories;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,21 +20,43 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => options.AddPolicy("AllowOrigin", policy =>
 {
     //policy.WithOrigins("http://127.0.0.1:5500").AllowCredentials();
-    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5500").AllowCredentials();
-    //policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    //policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5500").AllowCredentials();
+    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 }));
 
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)    
+
+// Authentication with cookie
+/*builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)    
     .AddCookie(options =>
     {
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
         options.SlidingExpiration = true;
     });
+*/
 
-
+/// Authentication with JWT
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
+            (builder.Configuration["JWT:Secret"]))
+    };
+});
 
 var connection = builder.Configuration.GetSection("ConnectionStrings");
 builder.Services.Configure<Connection>(connection);
@@ -64,8 +91,12 @@ builder.Services.AddSingleton<ProductsService>();
 builder.Services.AddSingleton<ListProCateReposiory>();
 builder.Services.AddSingleton<ListProCateServices>();
 
-builder.Services.AddSingleton<UsersRepository>();
-builder.Services.AddSingleton<UsersService>();
+builder.Services.AddSingleton<UsersCookieRepository>();
+builder.Services.AddSingleton<UsersCookieService>();
+
+builder.Services.AddSingleton<UsersJWTRepository>();
+builder.Services.AddSingleton<UsersJWTService>();
+
 
 var app = builder.Build();
 
